@@ -130,6 +130,12 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = string.Empty;
 });
 
+// Global exception handling - must be early so it catches downstream exceptions
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+// Validate requests (content type, size, basic header sanitation)
+app.UseMiddleware<RequestValidationMiddleware>();
+
 // NOTE: Disable HTTPS redirection in local dev to avoid issues with missing dev certificates
 // app.UseHttpsRedirection();
 
@@ -139,8 +145,8 @@ app.MapControllers();
 
 // Helpful runtime info for developers
 Console.WriteLine("═══════════════════════════════════════════════════════════");
-Console.WriteLine("🟢 Swagger UI should be available at the application root (/)");
-Console.WriteLine($"📍 Listening URLs: {string.Join(", ", app.Urls)}");
+Console.WriteLine("\uD83D\uDFE2 Swagger UI should be available at the application root (/) ");
+Console.WriteLine($"\uD83D\uDCCD Listening URLs: {string.Join(", ", app.Urls)}");
 Console.WriteLine("═══════════════════════════════════════════════════════════");
 
 app.Run();
